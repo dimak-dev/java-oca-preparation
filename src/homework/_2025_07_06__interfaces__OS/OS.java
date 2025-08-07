@@ -11,7 +11,8 @@ class OS implements /*CustomDescComparable,*/ CustomVersionComparable, Comparabl
 
     @Override
     public String toString() {
-        return "OS Hash: " + String.format("%8s", Integer.toString(this.hashCode(), 16)) + " | Name: " + String.format("%10s", name) + " | Version: " + String.format("%4d", version);
+        var hash = Integer.toString(this.hashCode(), 16);
+        return String.format("OS Hash: %-8s | Name: %-10s | Version: %-4d", hash, name, version);
     }
 
     @Override
