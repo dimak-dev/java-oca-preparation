@@ -1,6 +1,7 @@
 package homework._2025_07_06__interfaces__OS;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class Main {
     public static void main(String[] args) {
@@ -45,6 +46,27 @@ public class Main {
         if (result2 >= 0) {
             System.out.println("Element gefunden: " + os[result2]);
         }
+
+        System.out.println("------------ Nutzung von Lambda ---------------");
+        Arrays.sort(os, (o1, o2) -> o1.getVersion() - o2.getVersion());
+//        Arrays.sort(os, Comparator.comparingInt(OS::getVersion));
+        print(os);
+
+        System.out.println("------------ Nutzung von Lambda (Desc) ---------------");
+        Arrays.sort(os, (o1, o2) -> o2.getVersion() - o1.getVersion());
+        print(os);
+
+
+        System.out.println("------------ Nutzung von anonymer Klasse ---------------");
+
+        Comparator<OS> comparator = new Comparator<>() {
+            public int compare(OS o1, OS o2) {
+                return o1.getVersion() - o2.getVersion();
+            }
+        };
+
+        Arrays.sort(os, comparator);
+        print(os);
     }
 
     private static void print(OS[] os) {

@@ -9,6 +9,10 @@ class OS implements /*CustomDescComparable,*/ CustomVersionComparable, Comparabl
         this.version = version;
     }
 
+    public int getVersion() {
+        return version;
+    }
+
     @Override
     public String toString() {
         var hash = Integer.toString(this.hashCode(), 16);
