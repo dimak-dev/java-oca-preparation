@@ -1,4 +1,4 @@
-package aufgaben._2025_07_06__interfaces__OS;
+package homework._2025_07_06__interfaces__OS;
 
 class OS implements /*CustomDescComparable,*/ CustomVersionComparable, Comparable<OS> {
     private final String name;

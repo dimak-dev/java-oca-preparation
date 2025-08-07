@@ -1,4 +1,4 @@
-package aufgaben._2025_07_06__interfaces__Geometry;
+package homework._2025_07_06__interfaces__Geometry;
 
 class Rectangle implements AreaCalculable, PartOfAreaCalculable {
     private final double width;

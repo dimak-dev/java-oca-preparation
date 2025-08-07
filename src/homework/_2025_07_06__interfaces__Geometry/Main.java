@@ -1,4 +1,4 @@
-package aufgaben._2025_07_06__interfaces__Geometry;
+package homework._2025_07_06__interfaces__Geometry;
 
 /**
  * Führen Sie den Begriff "Rechteck" in einem Projekt ein. Ein Rechteck hat Breite und Höhe.
