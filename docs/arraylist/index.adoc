@@ -1,0 +1,262 @@
+= Working with Java API - ArrayList
+:toc:
+:toc-title: Содержание
+:toclevels: 3
+
+== Назначение
+
+Тема "Working with Java API - ArrayList" является критически важной для экзамена OCA Java SE 8 и практической работы с динамическими коллекциями в Java.
+ArrayList - это самая популярная реализация интерфейса List, которая обеспечивает динамическое изменение размера массива во время выполнения.
+Понимание создания, манипулирования данными, итерации и особенностей работы с ArrayList необходимо для эффективного программирования и успешной сдачи экзамена.
+
+== Теория
+
+=== Что такое ArrayList
+
+ArrayList в Java - это реализация интерфейса List, основанная на динамическом массиве. В отличие от обычных массивов,
+ArrayList может изменять свой размер во время выполнения программы.
+
+**Основные характеристики ArrayList:**
+
+* Динамический размер (может увеличиваться и уменьшаться)
+* Основан на внутреннем массиве объектов
+* Индексация начинается с 0
+* Позволяет хранить null значения
+* Позволяет дубликаты элементов
+* Не является потокобезопасным
+* Обеспечивает быстрый доступ по индексу (O(1))
+
+=== Создание ArrayList
+
+В Java существует несколько способов создания ArrayList:
+
+**Создание пустого ArrayList:**
+[source,java]
+----
+ArrayList<String> names = new ArrayList<>();
+List<String> list = new ArrayList<>();  // Рекомендуемый подход
+----
+
+**Создание с начальной емкостью:**
+[source,java]
+----
+ArrayList<Integer> numbers = new ArrayList<>(20);
+----
+
+**Создание из существующей коллекции:**
+[source,java]
+----
+List<String> cities = Arrays.asList("Москва", "СПб", "Казань");
+ArrayList<String> citiesList = new ArrayList<>(cities);
+----
+
+=== Основные операции с ArrayList
+
+**Добавление элементов:**
+
+* `add(element)` - добавление в конец списка
+* `add(index, element)` - добавление по определенному индексу
+* `addAll(collection)` - добавление всех элементов коллекции
+
+**Доступ к элементам:**
+
+* `get(index)` - получение элемента по индексу
+* `set(index, element)` - изменение элемента по индексу
+* `contains(element)` - проверка наличия элемента
+* `indexOf(element)` - поиск индекса элемента
+
+**Удаление элементов:**
+
+* `remove(index)` - удаление по индексу
+* `remove(element)` - удаление по значению
+* `removeAll(collection)` - удаление всех элементов коллекции
+* `clear()` - очистка всего списка
+
+**Информация о размере:**
+
+* `size()` - количество элементов
+* `isEmpty()` - проверка на пустоту
+
+=== Различия между ArrayList и массивами
+
+[cols="1,1,1", options="header"]
+|===
+| Характеристика | Массив | ArrayList
+
+| Размер
+| Фиксированный
+| Динамический
+
+| Типы данных
+| Примитивы и объекты
+| Только объекты
+
+| Производительность
+| Быстрее
+| Немного медленнее
+
+| Методы
+| Ограниченные
+| Множество методов
+
+| Память
+| Меньше накладных расходов
+| Больше накладных расходов
+|===
+
+== Примеры кода
+
+=== Пример 1: Создание и базовые операции
+[source,java]
+----
+// Создание ArrayList
+List<String> fruits = new ArrayList<>();
+
+// Добавление элементов
+fruits.add("Яблоко");
+fruits.add("Банан");
+fruits.add("Апельсин");
+
+// Доступ к элементам
+String first = fruits.get(0);
+System.out.println("Первый фрукт: " + first);
+
+// Изменение элемента
+fruits.set(1, "Виноград");
+System.out.println("Обновленный список: " + fruits);
+----
+
+=== Пример 2: Итерация по ArrayList
+[source,java]
+----
+List<Integer> numbers = Arrays.asList(10, 20, 30, 40, 50);
+
+// Обычный цикл for
+for (int i = 0; i < numbers.size(); i++) {
+    System.out.println("Элемент " + i + ": " + numbers.get(i));
+}
+
+// Расширенный for
+for (Integer number : numbers) {
+    System.out.println("Значение: " + number);
+}
+
+// forEach с лямбдой (Java 8+)
+numbers.forEach(n -> System.out.println("Лямбда: " + n));
+----
+
+=== Пример 3: Удаление элементов
+[source,java]
+----
+List<String> animals = new ArrayList<>();
+animals.add("Кот");
+animals.add("Собака");
+animals.add("Птица");
+
+// Удаление по индексу
+String removed = animals.remove(0);
+System.out.println("Удален: " + removed);
+
+// Удаление по значению
+boolean wasRemoved = animals.remove("Собака");
+System.out.println("Собака удалена: " + wasRemoved);
+----
+
+== Примеры вопросов
+
+=== Вопрос 1
+Что произойдет при выполнении следующего кода?
+[source,java]
+----
+List<String> list = new ArrayList<>();
+list.add("A");
+list.add("B");
+System.out.println(list.get(2));
+----
+
+* A) Выведет null ❌ НЕВЕРНО
+* B) Выведет пустую строку ❌ НЕВЕРНО
+* C) Бросит IndexOutOfBoundsException ✓ ВЕРНО
+* D) Программа не скомпилируется ❌ НЕВЕРНО
+
+*Правильный ответ:* C - попытка доступа к индексу 2 при размере списка 2 приведет к исключению
+
+=== Вопрос 2
+Какой метод НЕ существует в классе ArrayList?
+
+* A) add(int index, E element) ❌ НЕВЕРНО
+* B) length() ✓ ВЕРНО
+* C) remove(int index) ❌ НЕВЕРНО
+* D) size() ❌ НЕВЕРНО
+
+*Правильный ответ:* B - у ArrayList есть метод size(), но нет метода length() (length есть у массивов)
+
+=== Вопрос 3
+Что будет результатом выполнения?
+[source,java]
+----
+List<String> list = new ArrayList<>();
+list.add("X");
+list.add(0, "Y");
+list.add("Z");
+System.out.println(list);
+----
+
+* A) [X, Y, Z] ❌ НЕВЕРНО
+* B) [Y, X, Z] ✓ ВЕРНО
+* C) [Y, Z, X] ❌ НЕВЕРНО
+* D) [X, Z, Y] ❌ НЕВЕРНО
+
+*Правильный ответ:* B - "Y" вставляется в позицию 0, сдвигая "X" на позицию 1
+
+== Типичные ошибки
+
+=== Ошибка 1: IndexOutOfBoundsException
+
+**Проблема:** Попытка доступа к несуществующему индексу
+[source,java]
+----
+List<String> list = new ArrayList<>();
+list.add("Item");
+String item = list.get(5); // Ошибка!
+----
+
+**Решение:** Всегда проверяйте размер списка перед доступом по индексу
+
+=== Ошибка 2: ConcurrentModificationException
+
+**Проблема:** Изменение списка во время итерации
+[source,java]
+----
+for (String item : list) {
+    if (item.equals("remove")) {
+        list.remove(item); // Ошибка!
+    }
+}
+----
+
+**Решение:** Используйте Iterator или создайте отдельную коллекцию для элементов к удалению
+
+=== Ошибка 3: Неправильное удаление Integer элементов
+
+**Проблема:** Путаница между удалением по индексу и по значению
+[source,java]
+----
+List<Integer> numbers = Arrays.asList(1, 2, 3);
+numbers.remove(1); // Удаляет элемент по индексу 1, а не значение 1!
+----
+
+**Решение:** Используйте `remove((Integer) 1)` для удаления значения
+
+== Связанные API
+
+* `java.util.List` - интерфейс, который реализует ArrayList
+* `java.util.Collection` - родительский интерфейс для всех коллекций
+* `java.util.Arrays` - утилитный класс для работы с массивами
+
+== Связанные темы
+
+* xref:../oo-concepts/index.adoc[OO Concepts]
+* xref:../java-data-types/index.adoc[Working with Java Data Types]
+* xref:../constructors/index.adoc[Constructors]
+* xref:../methods/index.adoc[Working with Methods]

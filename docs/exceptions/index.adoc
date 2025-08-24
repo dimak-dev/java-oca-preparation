@@ -1,0 +1,256 @@
+= Handling Exceptions
+:toc:
+:toc-title: Содержание
+:toclevels: 3
+
+== Назначение
+
+Тема "Handling Exceptions" является критически важной для экзамена OCA Java SE 8 и безопасного программирования на Java.
+Исключения (exceptions) - это механизм обработки ошибок, который позволяет программе корректно реагировать на непредвиденные ситуации.
+Понимание иерархии исключений, правильное использование try-catch-finally блоков и создание собственных исключений необходимо
+для написания надежного кода и успешной сдачи экзамена.
+
+== Теория
+
+=== Что такое исключения
+
+Исключение (Exception) в Java - это событие, которое происходит во время выполнения программы и нарушает нормальный поток инструкций.
+Когда в методе возникает ошибка, метод создает объект исключения и передает его системе времени выполнения.
+
+**Основные характеристики исключений:**
+
+* Исключения являются объектами, наследующими от класса Throwable
+* Позволяют отделить код обработки ошибок от основной логики
+* Обеспечивают передачу информации об ошибке вверх по стеку вызовов
+* Могут быть обработаны (catch) или переброшены дальше (throws)
+
+=== Иерархия исключений
+
+----
+Throwable
+├── Error (системные ошибки, не обрабатываются в приложении)
+└── Exception
+    ├── RuntimeException (unchecked exceptions)
+    │   ├── NullPointerException
+    │   ├── IllegalArgumentException
+    │   ├── ArrayIndexOutOfBoundsException
+    │   └── ArithmeticException
+    └── IOException, SQLException и др. (checked exceptions)
+----
+
+**Типы исключений:**
+
+* **Checked exceptions** - должны быть обработаны или объявлены в throws
+* **Unchecked exceptions (RuntimeException)** - не требуют обязательной обработки
+* **Errors** - серьезные системные ошибки, обычно не обрабатываются
+
+=== Блоки try-catch-finally
+
+**Базовый синтаксис:**
+[source,java]
+----
+try {
+    // код, который может вызвать исключение
+} catch (ExceptionType e) {
+    // обработка исключения
+} finally {
+    // код, который выполняется всегда
+}
+----
+
+**Правила использования:**
+
+* Блок try должен содержать код, который может вызвать исключение
+* Блок catch обрабатывает определенный тип исключения
+* Блок finally выполняется всегда, независимо от наличия исключений
+* Можно иметь множественные catch блоки
+* finally блок не обязателен, но если есть, то выполняется всегда
+
+=== Множественные catch блоки
+
+[source,java]
+----
+try {
+    // рискованный код
+} catch (FileNotFoundException e) {
+    // обработка отсутствующего файла
+} catch (IOException e) {
+    // обработка других I/O ошибок
+} catch (Exception e) {
+    // обработка всех остальных исключений
+}
+----
+
+**Важные правила:**
+
+* Более специфичные исключения должны идти перед более общими
+* Нельзя поставить catch для Exception перед catch для его наследников
+
+=== Создание собственных исключений
+
+[source,java]
+----
+// Checked исключение
+class BusinessException extends Exception {
+    public BusinessException(String message) {
+        super(message);
+    }
+}
+
+// Unchecked исключение
+class ValidationException extends RuntimeException {
+    public ValidationException(String message, Throwable cause) {
+        super(message, cause);
+    }
+}
+----
+
+== Примеры кода
+
+=== Пример 1: Базовый try-catch
+[source,java]
+----
+try {
+    int result = 10 / 0; // ArithmeticException
+    System.out.println("Результат: " + result);
+} catch (ArithmeticException e) {
+    System.out.println("Ошибка деления на ноль: " + e.getMessage());
+}
+System.out.println("Программа продолжается");
+----
+
+=== Пример 2: Множественные catch блоки
+[source,java]
+----
+try {
+    String[] array = {"1", "2", null};
+    int index = 5;
+    int value = Integer.parseInt(array[index]); // может быть несколько исключений
+} catch (ArrayIndexOutOfBoundsException e) {
+    System.out.println("Неверный индекс массива");
+} catch (NullPointerException e) {
+    System.out.println("Попытка обработать null значение");
+} catch (NumberFormatException e) {
+    System.out.println("Неверный формат числа");
+}
+----
+
+=== Пример 3: Блок finally
+[source,java]
+----
+FileInputStream file = null;
+try {
+    file = new FileInputStream("data.txt");
+    // работа с файлом
+} catch (IOException e) {
+    System.out.println("Ошибка работы с файлом: " + e.getMessage());
+} finally {
+    if (file != null) {
+        try {
+            file.close(); // закрываем ресурс
+        } catch (IOException e) {
+            System.out.println("Ошибка закрытия файла");
+        }
+    }
+}
+----
+
+== Примеры вопросов
+
+=== Вопрос 1
+Что произойдет при выполнении следующего кода?
+[source,java]
+----
+try {
+    int[] arr = {1, 2, 3};
+    System.out.println(arr[5]);
+} catch (RuntimeException e) {
+    System.out.println("Runtime exception");
+} catch (ArrayIndexOutOfBoundsException e) {
+    System.out.println("Array exception");
+}
+----
+
+* A) Выведет "Runtime exception" ✓ ВЕРНО
+* B) Выведет "Array exception" ❌ НЕВЕРНО
+* C) Код не скомпилируется ❌ НЕВЕРНО
+* D) Выведет оба сообщения ❌ НЕВЕРНО
+
+*Правильный ответ:* A - ArrayIndexOutOfBoundsException является наследником RuntimeException, поэтому будет обработан первым catch блоком
+
+=== Вопрос 2
+Какой блок выполняется ВСЕГДА, независимо от наличия исключений?
+
+* A) try ❌ НЕВЕРНО
+* B) catch ❌ НЕВЕРНО
+* C) finally ✓ ВЕРНО
+* D) throws ❌ НЕВЕРНО
+
+*Правильный ответ:* C - блок finally выполняется всегда, даже если исключение не возникло
+
+=== Вопрос 3
+Что из перечисленного является checked исключением?
+
+* A) NullPointerException ❌ НЕВЕРНО
+* B) IOException ✓ ВЕРНО
+* C) IllegalArgumentException ❌ НЕВЕРНО
+* D) ArrayIndexOutOfBoundsException ❌ НЕВЕРНО
+
+*Правильный ответ:* B - IOException является checked исключением и должно быть обработано или объявлено в throws
+
+== Типичные ошибки
+
+=== Ошибка 1: Неправильный порядок catch блоков
+
+**Проблема:** Размещение более общих исключений перед более специфичными
+[source,java]
+----
+try {
+    // код
+} catch (Exception e) {        // Слишком общий catch
+    // обработка
+} catch (IOException e) {      // Недостижимый код!
+    // эта ветка никогда не выполнится
+}
+----
+
+**Решение:** Размещайте более специфичные исключения первыми
+
+=== Ошибка 2: Поглощение исключений
+
+**Проблема:** Перехват исключения без его обработки
+[source,java]
+----
+try {
+    riskyMethod();
+} catch (Exception e) {
+    // Исключение "проглочено" - плохая практика
+}
+----
+
+**Решение:** Всегда логируйте или обрабатывайте исключения должным образом
+
+=== Ошибка 3: Неправильное закрытие ресурсов
+
+**Проблема:** Не закрытие ресурсов при возникновении исключения
+[source,java]
+----
+FileInputStream file = new FileInputStream("data.txt");
+file.read(); // Если здесь исключение, файл не закроется
+file.close();
+----
+
+**Решение:** Используйте try-finally или try-with-resources
+
+== Связанные API
+
+* `java.lang.Throwable` - базовый класс для всех исключений
+* `java.lang.Exception` - базовый класс для исключений приложения
+* `java.lang.RuntimeException` - базовый класс для unchecked исключений
+
+== Связанные темы
+
+* xref:../oo-concepts/index.adoc[OO Concepts]
+* xref:../java-data-types/index.adoc[Working with Java Data Types]
+* xref:../constructors/index.adoc[Constructors]
+* xref:../methods/index.adoc[Working with Methods]

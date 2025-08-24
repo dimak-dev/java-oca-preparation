@@ -1,0 +1,362 @@
+= Lambda Expressions
+:toc:
+:toc-title: Содержание
+:toclevels: 3
+
+== Назначение
+
+Тема "Lambda Expressions" является важной для экзамена OCA Java SE 8 и современного программирования на Java.
+Лямбда-выражения представляют собой краткий способ записи анонимных функций и являются ключевой особенностью Java 8.
+Понимание синтаксиса лямбда-выражений, функциональных интерфейсов и ссылок на методы необходимо
+для эффективного использования современных возможностей Java и успешной сдачи экзамена.
+
+== Теория
+
+=== Что такое лямбда-выражения
+
+Лямбда-выражение - это краткий способ записи анонимной функции, которая может быть передана как аргумент методу или сохранена в переменной.
+
+**Основные характеристики:**
+
+* Краткая альтернатива анонимным классам
+* Могут использоваться только с функциональными интерфейсами
+* Улучшают читаемость кода
+* Поддерживают замыкания (closures)
+* Доступны начиная с Java 8
+
+**Сравнение с анонимными классами:**
+
+[source,java]
+----
+// Традиционный подход с анонимным классом
+Runnable traditionalRunnable = new Runnable() {
+    @Override
+    public void run() {
+        System.out.println("Выполняется с анонимным классом");
+    }
+};
+
+// Лямбда-выражение - краткая запись
+Runnable lambdaRunnable = () -> System.out.println("Выполняется с лямбдой");
+----
+
+=== Синтаксис лямбда-выражений
+
+Базовый синтаксис лямбда-выражения: `(параметры) -> выражение_или_блок`
+
+**Компоненты лямбда-выражения:**
+
+* **Список параметров** - в круглых скобках, разделенные запятыми
+* **Стрелка** - `->` разделяет параметры и тело
+* **Тело** - выражение или блок кода
+
+**Различные формы записи:**
+
+[source,java]
+----
+// Без параметров
+() -> System.out.println("Hello")
+
+// Один параметр (скобки необязательны)
+s -> s.length()
+(s) -> s.length()
+
+// Несколько параметров (скобки обязательны)
+(a, b) -> a + b
+
+// Блок кода (фигурные скобки + явный return)
+s -> {
+    System.out.println("Processing: " + s);
+    return s.toUpperCase();
+}
+
+// С указанием типов параметров
+(String s) -> s.length()
+(int a, int b) -> a * b
+----
+
+=== Функциональные интерфейсы
+
+Функциональный интерфейс - это интерфейс с ровно одним абстрактным методом. Лямбда-выражения могут использоваться только с функциональными интерфейсами.
+
+**Аннотация @FunctionalInterface:**
+
+[source,java]
+----
+@FunctionalInterface
+public interface MyFunctionalInterface {
+    void doSomething(String input);
+
+    // Методы по умолчанию и статические методы разрешены
+    default void defaultMethod() { }
+    static void staticMethod() { }
+}
+----
+
+**Встроенные функциональные интерфейсы:**
+
+* `Predicate<T>` - принимает T, возвращает boolean
+* `Consumer<T>` - принимает T, ничего не возвращает
+* `Function<T,R>` - принимает T, возвращает R
+* `Supplier<T>` - не принимает параметры, возвращает T
+* `UnaryOperator<T>` - принимает T, возвращает T
+* `BinaryOperator<T>` - принимает два T, возвращает T
+
+=== Встроенные функциональные интерфейсы
+
+**Predicate<T>:**
+
+Используется для тестирования условий (возвращает boolean):
+
+[source,java]
+----
+Predicate<String> isLongWord = s -> s.length() > 5;
+System.out.println(isLongWord.test("Programming")); // true
+System.out.println(isLongWord.test("Java")); // false
+----
+
+**Consumer<T>:**
+
+Принимает аргумент и выполняет операцию (void метод):
+
+[source,java]
+----
+Consumer<String> printer = s -> System.out.println("Output: " + s);
+printer.accept("Hello World");
+----
+
+**Function<T,R>:**
+
+Принимает аргумент типа T и возвращает результат типа R:
+
+[source,java]
+----
+Function<String, Integer> stringLength = s -> s.length();
+System.out.println(stringLength.apply("Hello")); // 5
+----
+
+**Supplier<T>:**
+
+Не принимает аргументы, но возвращает значение:
+
+[source,java]
+----
+Supplier<String> greeting = () -> "Hello, World!";
+System.out.println(greeting.get());
+----
+
+=== Ссылки на методы
+
+Ссылки на методы - это сокращенная запись лямбда-выражений, которые вызывают существующий метод.
+
+**Синтаксис:** `ClassName::methodName` или `object::methodName`
+
+**Типы ссылок на методы:**
+
+1. **Статический метод:** `ClassName::staticMethod`
+2. **Метод экземпляра конкретного объекта:** `object::instanceMethod`
+3. **Метод экземпляра произвольного объекта типа:** `ClassName::instanceMethod`
+4. **Конструктор:** `ClassName::new`
+
+**Примеры:**
+
+[source,java]
+----
+// Ссылка на статический метод
+Function<String, Integer> parser = Integer::parseInt;
+// Эквивалентно: s -> Integer.parseInt(s)
+
+// Ссылка на метод экземпляра
+Consumer<String> printer = System.out::println;
+// Эквивалентно: s -> System.out.println(s)
+
+// Ссылка на конструктор
+Supplier<List<String>> listSupplier = ArrayList::new;
+// Эквивалентно: () -> new ArrayList<>()
+----
+
+=== Переменные в лямбда-выражениях
+
+Лямбда-выражения могут обращаться к переменным из окружающего контекста, но с ограничениями:
+
+**Правила доступа к переменным:**
+
+* Локальные переменные должны быть final или effectively final
+* Поля класса (instance variables) доступны без ограничений
+* Статические переменные доступны без ограничений
+
+[source,java]
+----
+public void demonstrateVariableAccess() {
+    int localVar = 10; // effectively final
+
+    // Можно использовать effectively final переменную
+    Supplier<Integer> supplier = () -> localVar * 2;
+
+    // localVar = 20; // ОШИБКА! Переменная перестает быть effectively final
+}
+----
+
+== Примеры кода
+
+=== Пример 1: Базовый синтаксис лямбда-выражений
+
+Класс `BasicLambdasDemo` демонстрирует основы работы с лямбда-выражениями:
+
+[source,java]
+----
+include::../../src/com/ru/oca/lambdas/BasicLambdasDemo.java[lines=15..44]
+----
+
+**Ключевые аспекты:**
+
+* Сравнение традиционного подхода с анонимными классами и лямбда-выражениями
+* Краткость и читаемость лямбда-синтаксиса
+* Использование лямбда-выражений с различными функциональными интерфейсами
+
+=== Пример 2: Вариации синтаксиса
+
+Демонстрация различных форм записи лямбда-выражений:
+
+[source,java]
+----
+include::../../src/com/ru/oca/lambdas/BasicLambdasDemo.java[lines=49..79]
+----
+
+**Ключевые аспекты:**
+
+* Различные способы записи параметров (с скобками и без)
+* Разница между выражениями и блоками кода
+* Когда нужен явный return, а когда автоматический
+
+=== Пример 3: Встроенные функциональные интерфейсы
+
+Использование стандартных функциональных интерфейсов:
+
+[source,java]
+----
+include::../../src/com/ru/oca/lambdas/BasicLambdasDemo.java[lines=84..116]
+----
+
+**Ключевые аспекты:**
+
+* Практическое применение Predicate, Consumer, Function, Supplier
+* Понимание назначения каждого функционального интерфейса
+* Комбинирование лямбда-выражений с различными операциями
+
+== Примеры вопросов
+
+=== Вопрос 1
+Какое из следующих лямбда-выражений корректно для интерфейса `Predicate<String>`?
+
+* A) `s -> s.length() > 5` ✓ ПРАВИЛЬНО
+* B) `(s) -> System.out.println(s)` ❌ НЕВЕРНО
+* C) `s -> s.toUpperCase()` ❌ НЕВЕРНО
+* D) `() -> true` ❌ НЕВЕРНО
+
+*Правильный ответ:* A - Predicate должен возвращать boolean, и принимать один параметр.
+
+=== Вопрос 2
+Что будет результатом компиляции следующего кода?
+[source,java]
+----
+int x = 10;
+Supplier<Integer> supplier = () -> x * 2;
+x = 20;
+System.out.println(supplier.get());
+----
+
+* A) 20 ❌ НЕВЕРНО
+* B) 40 ❌ НЕВЕРНО
+* C) Ошибка компиляции ✓ ПРАВИЛЬНО
+* D) Исключение во время выполнения ❌ НЕВЕРНО
+
+*Правильный ответ:* C - Переменная x перестает быть effectively final после присвоения нового значения.
+
+=== Вопрос 3
+Какая ссылка на метод эквивалентна лямбда-выражению `s -> s.length()`?
+
+* A) `String::length` ✓ ПРАВИЛЬНО
+* B) `String.length()` ❌ НЕВЕРНО
+* C) `String::new` ❌ НЕВЕРНО
+* D) `String.length` ❌ НЕВЕРНО
+
+*Правильный ответ:* A - Синтаксис ссылки на метод экземпляра типа: ClassName::methodName.
+
+== Типичные ошибки
+
+=== Ошибка 1: Использование изменяемых локальных переменных
+
+Попытка изменить локальную переменную в лямбда-выражении:
+[source,java]
+----
+int counter = 0;
+List<String> items = Arrays.asList("a", "b", "c");
+items.forEach(item -> {
+    counter++; // ОШИБКА! Переменная не effectively final
+    System.out.println(item);
+});
+----
+
+**Решение:** Используйте объекты-обертки или поля класса:
+[source,java]
+----
+AtomicInteger counter = new AtomicInteger(0);
+List<String> items = Arrays.asList("a", "b", "c");
+items.forEach(item -> {
+    counter.incrementAndGet(); // Правильно
+    System.out.println(item);
+});
+----
+
+=== Ошибка 2: Неправильное использование return в блочных лямбдах
+
+Забывание return в блочном лямбда-выражении:
+[source,java]
+----
+Function<String, String> processor = s -> {
+    s.toUpperCase(); // ОШИБКА! Нет return
+};
+----
+
+**Решение:** В блочных лямбдах явно указывайте return:
+[source,java]
+----
+Function<String, String> processor = s -> {
+    return s.toUpperCase(); // Правильно
+};
+
+// Или используйте выражение
+Function<String, String> processor = s -> s.toUpperCase();
+----
+
+=== Ошибка 3: Использование лямбда с интерфейсами, не являющимися функциональными
+
+Попытка использовать лямбда с интерфейсом, имеющим более одного абстрактного метода:
+[source,java]
+----
+interface NotFunctional {
+    void method1();
+    void method2();
+}
+
+NotFunctional nf = () -> System.out.println("Test"); // ОШИБКА!
+----
+
+**Решение:** Используйте лямбда только с функциональными интерфейсами (один абстрактный метод).
+
+== Связанные API
+
+* `java.util.function` - пакет со стандартными функциональными интерфейсами
+* `Predicate<T>` - функциональный интерфейс для условий
+* `Consumer<T>` - функциональный интерфейс для операций без возврата значения
+* `Function<T,R>` - функциональный интерфейс для преобразований
+* `Supplier<T>` - функциональный интерфейс для поставщиков значений
+* `@FunctionalInterface` - аннотация для маркировки функциональных интерфейсов
+
+== Связанные темы
+
+* xref:../oo-concepts/index.adoc[OO Concepts]
+* xref:../methods/index.adoc[Working with Methods]
+* xref:../arraylist/index.adoc[Working with Java API - ArrayList]
+* xref:../inheritance/index.adoc[Working with Inheritance]

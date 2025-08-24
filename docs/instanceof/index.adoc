@@ -1,0 +1,296 @@
+= instanceof Operator
+:toc:
+:toc-title: Содержание
+:toclevels: 3
+
+== Назначение
+
+Тема "instanceof Operator" является важной частью экзамена OCA и покрывает использование оператора instanceof в Java.
+Понимание оператора instanceof, проверки типов в иерархии наследования и особенностей при работе со ссылками критически важно для безопасного приведения типов.
+Оператор instanceof помогает избежать ClassCastException и является основой для реализации полиморфного поведения в объектно-ориентированном программировании.
+
+== Теория
+
+=== Что такое оператор instanceof
+
+Оператор `instanceof` - это бинарный оператор, который проверяет, является ли объект экземпляром определенного класса или реализует определенный интерфейс.
+Он возвращает `true`, если объект может быть приведен к указанному типу, и `false` в противном случае.
+
+**Синтаксис:**
+[source,java]
+----
+объект instanceof ТипДанных
+----
+
+**Основные характеристики:**
+
+* Возвращает boolean значение
+* Проверяет не только точный тип, но и всю иерархию наследования
+* С null всегда возвращает false
+* Работает с классами, интерфейсами и массивами
+* Является безопасным способом проверки типа перед приведением
+
+=== Проверка типов в иерархии наследования
+
+Оператор `instanceof` учитывает всю иерархию наследования:
+
+[source,java]
+----
+class Animal { }
+class Dog extends Animal { }
+
+Dog dog = new Dog();
+System.out.println(dog instanceof Dog);      // true - точный тип
+System.out.println(dog instanceof Animal);   // true - родительский класс
+System.out.println(dog instanceof Object);   // true - все наследуют от Object
+----
+
+**Важные правила:**
+
+* Объект является экземпляром своего класса
+* Объект является экземпляром всех своих родительских классов
+* Объект является экземпляром всех интерфейсов, которые он реализует
+* Объекты несвязанных классов не являются экземплярами друг друга
+
+=== Работа с null
+
+Особое поведение `instanceof` с null значениями:
+
+[source,java]
+----
+String str = null;
+System.out.println(str instanceof String);  // false
+System.out.println(str instanceof Object);  // false
+----
+
+**Ключевые особенности:**
+
+* `instanceof` с null всегда возвращает false
+* Это не вызывает NullPointerException
+* Это делает проверку безопасной для null значений
+
+=== instanceof с интерфейсами
+
+Оператор работает и с интерфейсами:
+
+[source,java]
+----
+interface Drawable { }
+class Circle implements Drawable { }
+
+Circle circle = new Circle();
+System.out.println(circle instanceof Drawable);  // true
+System.out.println(circle instanceof Circle);    // true
+----
+
+**Применение:**
+
+* Проверка реализации интерфейса
+* Безопасное приведение к интерфейсному типу
+* Полиморфная обработка объектов разных типов
+
+=== Безопасное приведение типов
+
+Основное применение `instanceof` - безопасное приведение типов:
+
+**Без проверки instanceof (опасно):**
+[source,java]
+----
+Object obj = "Hello";
+String str = (String) obj;  // Может вызвать ClassCastException
+----
+
+**С проверкой instanceof (безопасно):**
+[source,java]
+----
+Object obj = "Hello";
+if (obj instanceof String) {
+    String str = (String) obj;  // Безопасно
+    // Работаем со строкой
+}
+----
+
+=== Паттерн использования
+
+Типичный паттерн использования `instanceof`:
+
+[source,java]
+----
+public void processObject(Object obj) {
+    if (obj instanceof String) {
+        String str = (String) obj;
+        // Обработка строки
+    } else if (obj instanceof Integer) {
+        Integer num = (Integer) obj;
+        // Обработка числа
+    } else if (obj instanceof List) {
+        List<?> list = (List<?>) obj;
+        // Обработка списка
+    }
+}
+----
+
+=== Ограничения и рекомендации
+
+**Ограничения:**
+
+* Нельзя использовать с примитивными типами
+* Компилятор предотвращает проверки несовместимых типов
+* Избегайте чрезмерного использования - это может указывать на плохой дизайн
+
+**Рекомендации:**
+
+* Используйте для безопасного приведения типов
+* Предпочитайте полиморфизм множественным instanceof проверкам
+* Всегда проверяйте тип перед приведением
+* Помните о проверке null, если это необходимо
+
+=== Альтернативы instanceof
+
+В некоторых случаях можно использовать альтернативы:
+
+**Class.isInstance():**
+[source,java]
+----
+Class<?> stringClass = String.class;
+boolean isString = stringClass.isInstance(obj);
+----
+
+**Обобщения (Generics):**
+[source,java]
+----
+List<String> strings = new ArrayList<>();
+// Компилятор гарантирует тип без instanceof
+----
+
+== Примеры кода
+
+=== Пример 1: Полная демонстрация оператора instanceof
+
+Класс `InstanceofDemo` демонстрирует все аспекты оператора instanceof:
+
+[source,java]
+----
+include::../../src/com/ru/oca/instanceof/InstanceofDemo.java[]
+----
+
+**Ключевые аспекты:**
+
+* Базовое использование instanceof с различными типами
+* Проверка типов в иерархии наследования
+* Полиморфное использование с безопасным приведением типов
+* Особенности поведения с null значениями
+* Работа с интерфейсами и множественной реализацией
+* Практические паттерны использования для обработки смешанных типов
+* Демонстрация ошибок без использования instanceof и их предотвращение
+
+== Примеры вопросов
+
+=== Вопрос 1
+Что будет выведено следующим кодом?
+[source,java]
+----
+String str = null;
+System.out.println(str instanceof String);
+System.out.println(str instanceof Object);
+----
+
+* A) false false ✓ ПРАВИЛЬНО
+* B) true true ❌ НЕВЕРНО
+* C) true false ❌ НЕВЕРНО
+* D) NullPointerException ❌ НЕВЕРНО
+
+*Правильный ответ:* A
+*Объяснение:* instanceof с null всегда возвращает false, независимо от типа. Это не вызывает NullPointerException.
+
+=== Вопрос 2
+Дана следующая иерархия классов:
+[source,java]
+----
+class Animal { }
+class Dog extends Animal { }
+Dog dog = new Dog();
+----
+Какие из следующих выражений вернут true?
+
+* A) Только dog instanceof Dog ❌ НЕВЕРНО
+* B) dog instanceof Dog и dog instanceof Animal ✓ ПРАВИЛЬНО
+* C) Только dog instanceof Animal ❌ НЕВЕРНО
+* D) Все выражения вернут false ❌ НЕВЕРНО
+
+*Правильный ответ:* B
+*Объяснение:* Объект является экземпляром как своего класса, так и всех родительских классов в иерархии наследования.
+
+=== Вопрос 3
+Что произойдет с этим кодом?
+[source,java]
+----
+Object obj = "Hello";
+if (obj instanceof Integer) {
+    Integer num = (Integer) obj;
+    System.out.println(num);
+}
+----
+
+* A) Выведет "Hello" ❌ НЕВЕРНО
+* B) ClassCastException ❌ НЕВЕРНО
+* C) Ничего не выведет ✓ ПРАВИЛЬНО
+* D) Ошибка компиляции ❌ НЕВЕРНО
+
+*Правильный ответ:* C
+*Объяснение:* obj содержит String, поэтому obj instanceof Integer вернет false, и код внутри if не выполнится.
+
+== Типичные ошибки
+
+=== Ошибка 1: Приведение типов без проверки instanceof
+
+**Проблема:** Попытка привести тип без предварительной проверки.
+[source,java]
+----
+Object obj = "Hello";
+Integer num = (Integer) obj; // ClassCastException!
+----
+
+**Решение:** Всегда проверять тип перед приведением:
+[source,java]
+----
+if (obj instanceof Integer) {
+    Integer num = (Integer) obj; // Безопасно
+}
+----
+
+=== Ошибка 2: Неправильное понимание иерархии наследования
+
+**Проблема:** Ожидание, что instanceof работает только с точным типом.
+[source,java]
+----
+Dog dog = new Dog();
+// Ошибочное мышление: dog instanceof Animal == false
+----
+
+**Решение:** Помнить, что instanceof проверяет всю иерархию наследования, включая родительские классы и интерфейсы.
+
+=== Ошибка 3: Забывание о поведении с null
+
+**Проблема:** Ожидание исключения при проверке null instanceof Type.
+[source,java]
+----
+String str = null;
+// Ошибочное ожидание NullPointerException
+boolean result = str instanceof String; // На самом деле false
+----
+
+**Решение:** Понимать, что instanceof с null всегда возвращает false и не вызывает исключений.
+
+== Связанные API
+
+* `Object.getClass()` - получение точного класса объекта
+* `Class.isInstance(Object)` - альтернативный способ проверки типа
+* `Class.isAssignableFrom(Class)` - проверка совместимости типов
+
+== Связанные темы
+
+* xref:../oo-concepts/index.adoc[OO Concepts]
+* xref:../java-data-types/index.adoc[Working with Java Data Types]
+* xref:../constructors/index.adoc[Constructors]
+* xref:../methods/index.adoc[Working with Methods]

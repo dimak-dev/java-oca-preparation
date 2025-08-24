@@ -1,0 +1,392 @@
+= Working with Java API - Time and Date
+:toc:
+:toc-title: Содержание
+:toclevels: 3
+
+== Назначение
+
+Тема "Working with Java API - Time and Date" является важной для экзамена OCA Java SE 8 и практической работы с датами и временем.
+Java 8 представил новый Time API (java.time) который заменил проблемные классы Date и Calendar.
+Понимание основных классов LocalDate, LocalTime, LocalDateTime, работы с форматированием и изменением значений
+необходимо для эффективной обработки временных данных и успешной сдачи экзамена.
+
+== Теория
+
+=== Обзор Java 8 Time API
+
+Java 8 Time API (пакет java.time) предоставляет улучшенную работу с датами и временем по сравнению со старыми классами Date и Calendar.
+
+**Основные преимущества нового API:**
+
+* Неизменяемость (immutability) - все объекты неизменяемы
+* Потокобезопасность благодаря неизменяемости
+* Четкое разделение концепций (дата, время, дата-время)
+* Улучшенная читаемость и простота использования
+* Поддержка различных календарных систем
+
+**Основные классы:**
+
+* `LocalDate` - дата без времени и часового пояса
+* `LocalTime` - время без даты и часового пояса
+* `LocalDateTime` - дата и время без часового пояса
+* `Period` - период времени в единицах дат
+* `Duration` - продолжительность в единицах времени
+
+=== LocalDate - работа с датами
+
+LocalDate представляет дату (год, месяц, день) без времени и часового пояса.
+
+**Создание LocalDate:**
+
+[source,java]
+----
+// Текущая дата
+LocalDate today = LocalDate.now();
+
+// Конкретная дата
+LocalDate specificDate = LocalDate.of(2023, 12, 25);
+LocalDate withMonth = LocalDate.of(2023, Month.DECEMBER, 25);
+
+// Из строки (формат ISO: YYYY-MM-DD)
+LocalDate fromString = LocalDate.parse("2023-06-15");
+----
+
+**Получение компонентов:**
+
+[source,java]
+----
+LocalDate date = LocalDate.of(2023, 7, 15);
+
+int year = date.getYear();           // 2023
+int month = date.getMonthValue();    // 7
+Month monthEnum = date.getMonth();   // JULY
+int day = date.getDayOfMonth();      // 15
+DayOfWeek dayOfWeek = date.getDayOfWeek(); // SATURDAY
+int dayOfYear = date.getDayOfYear(); // 196
+----
+
+**Методы проверки:**
+
+[source,java]
+----
+LocalDate date = LocalDate.of(2023, 7, 15);
+
+boolean isLeapYear = date.isLeapYear();
+boolean isBefore = date.isBefore(LocalDate.of(2024, 1, 1));
+boolean isAfter = date.isAfter(LocalDate.of(2020, 12, 31));
+----
+
+=== LocalTime - работа со временем
+
+LocalTime представляет время (час, минута, секунда, наносекунда) без даты и часового пояса.
+
+**Создание LocalTime:**
+
+[source,java]
+----
+// Текущее время
+LocalTime now = LocalTime.now();
+
+// Конкретное время
+LocalTime time1 = LocalTime.of(14, 30, 45);    // 14:30:45
+LocalTime time2 = LocalTime.of(15, 45);        // 15:45:00
+LocalTime time3 = LocalTime.of(12, 0, 0, 123456789); // с наносекундами
+
+// Из строки (формат ISO: HH:MM:SS)
+LocalTime fromString = LocalTime.parse("09:15:30");
+----
+
+**Константы:**
+
+[source,java]
+----
+LocalTime midnight = LocalTime.MIDNIGHT; // 00:00:00
+LocalTime noon = LocalTime.NOON;         // 12:00:00
+LocalTime min = LocalTime.MIN;           // 00:00:00
+LocalTime max = LocalTime.MAX;           // 23:59:59.999999999
+----
+
+**Получение компонентов:**
+
+[source,java]
+----
+LocalTime time = LocalTime.of(14, 30, 45);
+
+int hour = time.getHour();     // 14
+int minute = time.getMinute(); // 30
+int second = time.getSecond(); // 45
+int nano = time.getNano();     // 0
+----
+
+=== LocalDateTime - дата и время
+
+LocalDateTime объединяет LocalDate и LocalTime в одном объекте.
+
+**Создание LocalDateTime:**
+
+[source,java]
+----
+// Текущий момент
+LocalDateTime now = LocalDateTime.now();
+
+// Конкретный момент
+LocalDateTime dateTime = LocalDateTime.of(2023, 12, 31, 23, 59, 59);
+
+// Из строки (формат ISO: YYYY-MM-DDTHH:MM:SS)
+LocalDateTime fromString = LocalDateTime.parse("2023-06-15T14:30:45");
+
+// Объединение LocalDate и LocalTime
+LocalDate date = LocalDate.of(2023, 7, 4);
+LocalTime time = LocalTime.of(18, 30);
+LocalDateTime combined1 = LocalDateTime.of(date, time);
+LocalDateTime combined2 = date.atTime(time);
+LocalDateTime combined3 = time.atDate(date);
+----
+
+**Получение компонентов LocalDate и LocalTime:**
+
+[source,java]
+----
+LocalDateTime dateTime = LocalDateTime.now();
+
+LocalDate datePart = dateTime.toLocalDate();
+LocalTime timePart = dateTime.toLocalTime();
+----
+
+=== Методы изменения (возвращают новые объекты)
+
+Все объекты Time API неизменяемы, поэтому методы "изменения" возвращают новые объекты.
+
+**Методы plus (добавление):**
+
+[source,java]
+----
+LocalDate date = LocalDate.of(2023, 7, 15);
+
+LocalDate nextDay = date.plusDays(1);
+LocalDate nextWeek = date.plusWeeks(1);
+LocalDate nextMonth = date.plusMonths(1);
+LocalDate nextYear = date.plusYears(1);
+----
+
+**Методы minus (вычитание):**
+
+[source,java]
+----
+LocalTime time = LocalTime.of(14, 30, 45);
+
+LocalTime earlierHour = time.minusHours(2);
+LocalTime earlierMinute = time.minusMinutes(15);
+LocalTime earlierSecond = time.minusSeconds(30);
+----
+
+**Методы with (установка значений):**
+
+[source,java]
+----
+LocalDateTime dateTime = LocalDateTime.of(2023, 7, 15, 14, 30, 45);
+
+LocalDateTime newYear = dateTime.withYear(2024);
+LocalDateTime newMonth = dateTime.withMonth(12);
+LocalDateTime newDay = dateTime.withDayOfMonth(25);
+LocalDateTime newHour = dateTime.withHour(18);
+----
+
+=== Форматирование и парсинг
+
+**Стандартные форматы:**
+
+[source,java]
+----
+LocalDate date = LocalDate.of(2023, 7, 15);
+LocalTime time = LocalTime.of(14, 30, 45);
+LocalDateTime dateTime = LocalDateTime.of(date, time);
+
+// toString() использует ISO формат
+System.out.println(date);     // 2023-07-15
+System.out.println(time);     // 14:30:45
+System.out.println(dateTime); // 2023-07-15T14:30:45
+----
+
+**Пользовательские форматы:**
+
+[source,java]
+----
+LocalDate date = LocalDate.of(2023, 7, 15);
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+String formatted = date.format(formatter);     // 15/07/2023
+LocalDate parsed = LocalDate.parse("15/07/2023", formatter);
+----
+
+**Предопределенные форматеры:**
+
+[source,java]
+----
+LocalDateTime dateTime = LocalDateTime.now();
+
+String iso = dateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+String basic = dateTime.format(DateTimeFormatter.BASIC_ISO_DATE);
+----
+
+== Примеры кода
+
+=== Пример 1: Работа с LocalDate
+
+Класс `BasicTimeDemo` демонстрирует основы работы с LocalDate:
+
+[source,java]
+----
+include::../../src/com/ru/oca/timedate/BasicTimeDemo.java[lines=16..46]
+----
+
+**Ключевые аспекты:**
+
+* Различные способы создания LocalDate (now, of, parse)
+* Получение компонентов даты
+* Использование Month enum для более читаемого кода
+* Методы сравнения и проверки
+
+=== Пример 2: Работа с LocalTime
+
+Демонстрация работы со временем:
+
+[source,java]
+----
+include::../../src/com/ru/oca/timedate/BasicTimeDemo.java[lines=51..84]
+----
+
+**Ключевые аспекты:**
+
+* Создание LocalTime с различной точностью
+* Константы для часто используемых значений времени
+* Получение компонентов времени
+* Сокращенные формы создания
+
+=== Пример 3: Работа с LocalDateTime
+
+Объединение даты и времени:
+
+[source,java]
+----
+include::../../src/com/ru/oca/timedate/BasicTimeDemo.java[lines=89..115]
+----
+
+**Ключевые аспекты:**
+
+* Создание LocalDateTime различными способами
+* Объединение отдельных LocalDate и LocalTime
+* Различные методы комбинирования (of, atTime, atDate)
+* Получение компонентов даты и времени
+
+== Примеры вопросов
+
+=== Вопрос 1
+Что будет выведено следующим кодом?
+[source,java]
+----
+LocalDate date = LocalDate.of(2023, 2, 28);
+date.plusDays(1);
+System.out.println(date);
+----
+
+* A) 2023-03-01 ❌ НЕВЕРНО
+* B) 2023-02-28 ✓ ПРАВИЛЬНО
+* C) 2023-02-29 ❌ НЕВЕРНО
+* D) Ошибка компиляции ❌ НЕВЕРНО
+
+*Правильный ответ:* B - LocalDate неизменяем, метод plusDays() возвращает новый объект, но результат не сохраняется.
+
+=== Вопрос 2
+Какой из следующих способов создания LocalTime корректен?
+
+* A) `LocalTime.of(25, 30)` ❌ НЕВЕРНО
+* B) `LocalTime.of(12, 65)` ❌ НЕВЕРНО
+* C) `LocalTime.of(14, 30, 45)` ✓ ПРАВИЛЬНО
+* D) `LocalTime.of(12)` ❌ НЕВЕРНО
+
+*Правильный ответ:* C - Часы должны быть 0-23, минуты и секунды 0-59. Метод of требует минимум 2 параметра.
+
+=== Вопрос 3
+Что произойдет при выполнении следующего кода?
+[source,java]
+----
+LocalDate date1 = LocalDate.parse("2023-13-01");
+----
+
+* A) Создастся дата 2024-01-01 ❌ НЕВЕРНО
+* B) Создастся дата 2023-01-01 ❌ НЕВЕРНО
+* C) Выбросится исключение ✓ ПРАВИЛЬНО
+* D) Создастся дата 2023-12-01 ❌ НЕВЕРНО
+
+*Правильный ответ:* C - Месяц 13 недопустим, выбросится DateTimeParseException.
+
+== Типичные ошибки
+
+=== Ошибка 1: Игнорирование неизменяемости
+
+Забывание сохранить результат операций изменения:
+[source,java]
+----
+LocalDate date = LocalDate.of(2023, 7, 15);
+date.plusDays(1); // ОШИБКА! Результат не сохранен
+System.out.println(date); // Выведет исходную дату
+----
+
+**Решение:** Сохраняйте результат операций:
+[source,java]
+----
+LocalDate date = LocalDate.of(2023, 7, 15);
+date = date.plusDays(1); // Правильно
+LocalDate newDate = date.plusDays(1); // Или создайте новую переменную
+----
+
+=== Ошибка 2: Неправильные параметры при создании
+
+Использование недопустимых значений:
+[source,java]
+----
+LocalTime time = LocalTime.of(25, 70); // ОШИБКА! 25 часов, 70 минут
+LocalDate date = LocalDate.of(2023, 13, 32); // ОШИБКА! 13 месяц, 32 день
+----
+
+**Решение:** Проверяйте диапазоны значений:
+[source,java]
+----
+LocalTime time = LocalTime.of(23, 59); // 0-23 часы, 0-59 минуты
+LocalDate date = LocalDate.of(2023, 12, 31); // 1-12 месяцы, правильные дни
+----
+
+=== Ошибка 3: Путаница с форматами при парсинге
+
+Неправильный формат строки для парсинга:
+[source,java]
+----
+LocalDate date = LocalDate.parse("15/07/2023"); // ОШИБКА! Неправильный формат
+----
+
+**Решение:** Используйте ISO формат или укажите форматтер:
+[source,java]
+----
+LocalDate date1 = LocalDate.parse("2023-07-15"); // ISO формат
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+LocalDate date2 = LocalDate.parse("15/07/2023", formatter);
+----
+
+== Связанные API
+
+* `LocalDate` - дата без времени и часового пояса
+* `LocalTime` - время без даты и часового пояса
+* `LocalDateTime` - дата и время без часового пояса
+* `DateTimeFormatter` - форматирование и парсинг дат/времени
+* `Month` - enum для месяцев
+* `DayOfWeek` - enum для дней недели
+* `Period` - период между датами
+* `Duration` - продолжительность времени
+
+== Связанные темы
+
+* xref:../java-data-types/index.adoc[Working with Java Data Types]
+* xref:../string-stringbuilder/index.adoc[Working with Java API - String, StringBuilder]
+* xref:../methods/index.adoc[Working with Methods]
+* xref:../exceptions/index.adoc[Handling Exceptions]
