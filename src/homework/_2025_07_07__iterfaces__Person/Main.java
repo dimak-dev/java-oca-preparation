@@ -16,7 +16,7 @@ public class Main {
         Arrays.sort(persons);
         printPersons(persons);
 
-        var result = Arrays.binarySearch(persons, new Person("John", "Black"));
+        int result = Arrays.binarySearch(persons, new Person("John", "Black"));
 
         if (result >= 0) {
             System.out.println("Found John Smith at index: " + result);
@@ -28,7 +28,7 @@ public class Main {
         Arrays.sort(persons, Comparator.reverseOrder());
         printPersons(persons);
 
-        var result2 = Arrays.binarySearch(persons, new Person("Paul", "Smith"), Comparator.reverseOrder());
+        int result2 = Arrays.binarySearch(persons, new Person("Paul", "Smith"), Comparator.reverseOrder());
         if (result2 >= 0) {
             System.out.println("Found Paul Smith at index: " + result2);
         } else {

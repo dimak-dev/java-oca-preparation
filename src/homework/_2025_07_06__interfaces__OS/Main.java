@@ -27,7 +27,7 @@ public class Main {
         Arrays.sort(os);
         print(os);
 
-        var search = new OS("Windows", 3);
+        OS search = new OS("Windows", 3);
         int result1 = Arrays.binarySearch(os, search);
         System.out.println("Binary Search: " + search);
 
@@ -39,7 +39,7 @@ public class Main {
         Arrays.sort(os, new OSDescComparator<>());
         print(os);
 
-        var search2 = new OS("Mac OS", 7);
+        OS search2 = new OS("Mac OS", 7);
         int result2 = Arrays.binarySearch(os, search2, new OSDescComparator<>());
         System.out.println("Binary Search: " + search2);
 
@@ -59,7 +59,7 @@ public class Main {
 
         System.out.println("------------ Nutzung von anonymer Klasse ---------------");
 
-        Comparator<OS> comparator = new Comparator<>() {
+        Comparator<OS> comparator = new Comparator<OS>() {
             public int compare(OS o1, OS o2) {
                 return o1.getVersion() - o2.getVersion();
             }

@@ -31,7 +31,7 @@ public class Main {
         Comparator<Integer> comparator = new LoggerComparator();
 
         System.out.println("Search before sorting");
-        var result = Arrays.binarySearch(arr, 296, comparator);
+        int result = Arrays.binarySearch(arr, 296, comparator);
         if (result < 0) System.out.println("Element not found");
 
         System.out.println("Search after sorting");

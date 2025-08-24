@@ -15,7 +15,7 @@ class OS implements /*CustomDescComparable,*/ CustomVersionComparable, Comparabl
 
     @Override
     public String toString() {
-        var hash = Integer.toString(this.hashCode(), 16);
+        String hash = Integer.toString(this.hashCode(), 16);
         return String.format("OS Hash: %-8s | Name: %-10s | Version: %-4d", hash, name, version);
     }
 
@@ -33,7 +33,7 @@ class OS implements /*CustomDescComparable,*/ CustomVersionComparable, Comparabl
 
     @Override
     public int compareTo(OS o) {
-        var nameCompare = this.name.compareTo(o.name);
+        int nameCompare = this.name.compareTo(o.name);
         if (nameCompare == 0) return this.version - o.version;
         return nameCompare;
     }

@@ -15,14 +15,14 @@ package homework._2025_07_06__interfaces__Geometry;
  */
 public class Main {
     public static void main(String[] args) {
-        var figures = generateFigures(100);
+        AreaCalculable[] figures = generateFigures(100);
         printArea(figures);
     }
 
     private static AreaCalculable[] generateFigures(int count) {
         AreaCalculable[] figures = new AreaCalculable[count];
 
-        for (var i = 0; i < figures.length; i++) {
+        for (int i = 0; i < figures.length; i++) {
             if (Math.random() < 0.5) {
                 figures[i] = new Circle(Math.random());
             } else {
@@ -34,7 +34,7 @@ public class Main {
     }
 
     private static void printArea(AreaCalculable[] figures) {
-        for (var figure : figures) {
+        for (AreaCalculable figure : figures) {
             System.out.println("Figure " + figure + " hat die Fläche: " + figure.getArea());
         }
     }
