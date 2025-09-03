@@ -2,7 +2,7 @@ package homework._2025_08_28__java_tipp_builder;
 
 import homework._2025_08_28__java_tipp_builder.java_tipp.JavaTipp;
 import homework._2025_08_28__java_tipp_builder.java_tipp.JavaTippBuilder;
-import homework._2025_08_28__java_tipp_builder.java_tipp.JavaTippFilter;
+import java.util.function.Predicate;
 
 public class Main {
 
@@ -34,9 +34,9 @@ public class Main {
         printFiltered(tipps, t -> t.getTopics().contains("Klassen") && !t.getTopics().contains("Vererbung"));
     }
 
-    static void printFiltered(JavaTipp[] tipps, JavaTippFilter filter) {
+    static void printFiltered(JavaTipp[] tipps, Predicate<JavaTipp> filter) {
         for (JavaTipp tipp : tipps) {
-            if (filter.filter(tipp)) {
+            if (filter.test(tipp)) {
                 System.err.println(tipp);
             }
 
