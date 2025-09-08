@@ -40,11 +40,11 @@ public class Main {
         LocalDate date = LocalDate.of(year, month.getValue(), 1);
 
         System.out.println("|--------------------|");
-        System.out.printf("| %-18s |%n", month.toString().transform(firstCapitalize) + ", " +  year);
+//        System.out.printf("| %-18s |%n", month.toString().transform(firstCapitalize) + ", " +  year);
         System.out.println("|--------------------|");        
        
         while (date.getMonth().equals(month)) { 
-            System.out.printf("| %02d | %-13s |%n", date.getDayOfMonth(), date.getDayOfWeek().toString().transform(firstCapitalize));
+//            System.out.printf("| %02d | %-13s |%n", date.getDayOfMonth(), date.getDayOfWeek().toString().transform(firstCapitalize));
             date = date.plus(Period.ofDays(1));
         }
     }
